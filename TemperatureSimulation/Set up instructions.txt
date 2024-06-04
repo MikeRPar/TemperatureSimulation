@@ -1,0 +1,18 @@
+This document is for setting up the development environment in visual studio,
+there are other configurations from the instructions source.
+Instructions come from https://vulkan-tutorial.com/Development_environment#page_Windows
+
+1. Download the Vulkan SDK from https://vulkan.lunarg.com/
+2. Download 64-bit binaries for GLFW from https://www.glfw.org/download.html
+3. Download GLM from https://github.com/g-truc/glm/releases
+4. Go to Project properties and select all configurations and all platforms
+5. C++ -> General -> Additional Include Directories -> <Edit>
+   Then add the header directories for Vulkan, GLFW and GLM. (Usually an Include folder)
+6. Linker -> General -> Additional Library Directories -> <Edit> 
+   Then add the /Lib for Vulkan and /lib-vc<YEAR> where YEAR is the year of Visual Studio you are using
+7. Linker -> Input -> Additional Dependencies -> <Edit>, Add the following lines:
+   vulkan-1.lib 
+   glfw3.lib
+8. Language -> C++ Language Standard, Enable at least C++17
+9. Set compiling mode to 64-bit with the dropdown by the debugger
+10. C/C++ -> preprocessor -> preprocessor definitions, add "_CRT_SECURE_NO_WARNINGS"
