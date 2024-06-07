@@ -57,12 +57,17 @@ class GraphicsEngine {
 
 		VkInstance instance; 
 		VkDebugUtilsMessengerEXT debugMessenger;
+		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
 		//SET UP FUNCTIONS
 		void initVulkan();
 		void initWindow();
 		void createInstance();
 		void setupDebugMessenger();
+
+		//Physical Device Selection
+		void pickPhysicalDevice();
+		bool isDeviceSuitable(VkPhysicalDevice device);
 
 		//Detail Checking
 		void printOptionalExtensions();
