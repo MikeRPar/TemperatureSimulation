@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <vector>
+#include <optional>
 
 #ifndef GRAPHICSENGINE_H
 #define GRAPHICSENGINE_H
@@ -44,6 +45,17 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
 	const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 	void* pUserData);
 
+//Struct type for storing Queue Family Indices
+struct QueueFamilyIndices
+{
+	std::optional<uint32_t> graphicsFamily;
+	std::optional<uint32_t> presentFamily;
+
+	bool isComplete()
+	{
+		return graphicsFamily.has_value() && presentFamily.has_value();
+	}
+};
 
 class GraphicsEngine {
 	public:
@@ -57,17 +69,27 @@ class GraphicsEngine {
 
 		VkInstance instance; 
 		VkDebugUtilsMessengerEXT debugMessenger;
+		VkSurfaceKHR surface;
 		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+		VkDevice device; //Logical device
+
+		VkQueue graphicsQueue;
+		VkQueue presentQueue;
 
 		//SET UP FUNCTIONS
 		void initVulkan();
 		void initWindow();
 		void createInstance();
+		void createSurface();
 		void setupDebugMessenger();
 
 		//Physical Device Selection
 		void pickPhysicalDevice();
 		bool isDeviceSuitable(VkPhysicalDevice device);
+		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+
+		//Logical Device Creation
+		void createLogicalDevice();
 
 		//Detail Checking
 		void printOptionalExtensions();
