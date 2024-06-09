@@ -14,6 +14,7 @@
 #include <cstdint> // Necessary for uint32_t
 #include <limits> // Necessary for std::numeric_limits
 #include <algorithm> // Necessary for std::clamp
+#include <fstream>
 
 void GraphicsEngine::run()
 {
@@ -53,6 +54,7 @@ void GraphicsEngine::initVulkan()
 	createLogicalDevice();
 	createSwapChain();
 	createImageViews();
+	createGraphicsPipeline();
 }
 
 void GraphicsEngine::createInstance()
@@ -312,6 +314,7 @@ VkPresentModeKHR GraphicsEngine::chooseSwapPresentMode(const std::vector<VkPrese
 
 	return VK_PRESENT_MODE_FIFO_KHR;
 }
+
 void GraphicsEngine::setupDebugMessenger()
 {
 	if (!enableValidationLayers) return;
@@ -431,7 +434,77 @@ void GraphicsEngine::createImageViews()
 
 }
 
+void GraphicsEngine::createGraphicsPipeline()
+{
+	auto vertShaderCode = readFile("shaders/vert.spv");
+	auto fragShaderCode = readFile("shaders/frag.spv");
+
+	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
+	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
+
+	VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
+	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+	vertShaderStageInfo.module = vertShaderModule;
+	vertShaderStageInfo.pName = "main";
+
+	VkPipelineShaderStageCreateInfo fragShaderStageInfo{};
+	fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+	fragShaderStageInfo.module = fragShaderModule;
+	fragShaderStageInfo.pName = "main";
+
+	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
+
+	//SPIR-V is compiled to machine code on Graphics pipeline creation, no longer need these
+	vkDestroyShaderModule(device, fragShaderModule, nullptr);
+	vkDestroyShaderModule(device, vertShaderModule, nullptr);
+}
+
 //END SECTION: SET UP FUNCTIONS
+
+//SECTION: Shaders
+
+std::vector<char> GraphicsEngine::readFile(const std::string& filename)
+{
+	//Read as binary, start at end of file (to get size for array)
+	std::ifstream file(filename, std::ios::ate | std::ios::binary);
+
+	if (!file.is_open()) {
+		throw std::runtime_error("failed to open file!");
+	}
+
+	size_t fileSize = (size_t)file.tellg();
+	std::vector<char> buffer(fileSize);
+
+	//Go back to start
+	file.seekg(0);
+	file.read(buffer.data(), fileSize);
+
+	file.close();
+
+	std::cout << "BUFFER SIZE: " << buffer.size() << std::endl;
+	return buffer;
+}
+
+VkShaderModule GraphicsEngine::createShaderModule(const std::vector<char>& code) 
+{
+	VkShaderModuleCreateInfo createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+	createInfo.codeSize = code.size();
+	createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+
+	VkShaderModule shaderModule;
+	if (vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS) 
+	{
+		throw std::runtime_error("failed to create shader module!");
+	}
+
+	return shaderModule;
+}
+
+//END SECTION: Shaders
+
 bool GraphicsEngine::checkValidationLayerSupport()
 {
 	uint32_t layerCount = 0;

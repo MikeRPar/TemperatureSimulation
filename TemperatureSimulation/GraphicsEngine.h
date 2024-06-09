@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <optional>
+#include <fstream>
 
 #ifndef GRAPHICSENGINE_H
 #define GRAPHICSENGINE_H
@@ -102,6 +103,7 @@ class GraphicsEngine {
 		void createSurface();
 		void createSwapChain();
 		void createImageViews();
+		void createGraphicsPipeline();
 		void setupDebugMessenger();
 
 		//Physical Device Selection
@@ -118,6 +120,10 @@ class GraphicsEngine {
 		VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 		VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 		VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
+		//Shaders
+		static std::vector<char> readFile(const std::string& filename);
+		VkShaderModule createShaderModule(const std::vector<char>& code);
 
 		//Detail Checking
 		void printOptionalExtensions();

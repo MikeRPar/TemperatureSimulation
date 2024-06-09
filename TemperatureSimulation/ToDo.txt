@@ -7,3 +7,5 @@ Swap chain:
 Post processing?
 
 Image view swizzle?
+
+Create shaders in runtime?
