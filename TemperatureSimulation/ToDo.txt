@@ -2,3 +2,8 @@
 Physical Device Selection:
 Consider all options and score for device selection.
 Add support for using multiple GPUs?
+
+Swap chain:
+Post processing?
+
+Image view swizzle?

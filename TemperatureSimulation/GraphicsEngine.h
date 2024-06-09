@@ -18,6 +18,10 @@
 		"VK_LAYER_KHRONOS_validation"
 	};
 
+	const std::vector<const char*> deviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	};
+
 #define DEFAULT_NAME "Graphics Window"
 #define DEFAULT_WIDTH 800
 #define DEFAULT_HEIGHT 600
@@ -57,6 +61,13 @@ struct QueueFamilyIndices
 	}
 };
 
+//Struct type for storing Swap chain support details
+struct SwapChainSupportDetails {
+	VkSurfaceCapabilitiesKHR capabilities;
+	std::vector<VkSurfaceFormatKHR> formats;
+	std::vector<VkPresentModeKHR> presentModes;
+};
+
 class GraphicsEngine {
 	public:
 		GraphicsEngine();
@@ -70,26 +81,43 @@ class GraphicsEngine {
 		VkInstance instance; 
 		VkDebugUtilsMessengerEXT debugMessenger;
 		VkSurfaceKHR surface;
+		VkSwapchainKHR swapChain;
+
 		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 		VkDevice device; //Logical device
 
 		VkQueue graphicsQueue;
 		VkQueue presentQueue;
 
+		std::vector<VkImage> swapChainImages;
+		VkFormat swapChainImageFormat;
+		VkExtent2D swapChainExtent;
+
+		std::vector<VkImageView> swapChainImageViews;
+
 		//SET UP FUNCTIONS
 		void initVulkan();
 		void initWindow();
 		void createInstance();
 		void createSurface();
+		void createSwapChain();
+		void createImageViews();
 		void setupDebugMessenger();
 
 		//Physical Device Selection
 		void pickPhysicalDevice();
 		bool isDeviceSuitable(VkPhysicalDevice device);
+		bool checkDeviceExtensionSupport(VkPhysicalDevice device);
 		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
 		//Logical Device Creation
 		void createLogicalDevice();
+
+		//Swapchain & Surface
+		SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+		VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+		VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+		VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
 		//Detail Checking
 		void printOptionalExtensions();
