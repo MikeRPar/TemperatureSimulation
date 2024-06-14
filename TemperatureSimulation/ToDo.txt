@@ -1,3 +1,9 @@
+Project Specific:
+Add dear Imgui for UI
+Cube class to fill vertex buffers and such
+
+
+Engine specific:
 
 Physical Device Selection:
 Consider all options and score for device selection.
@@ -9,3 +15,11 @@ Post processing?
 Image view swizzle?
 
 Create shaders in runtime?
+
+Use instancing for cubes/objects?
+
+Different input assembly?
+
+Different rasterizer settings for rendering? allow the user the change them?
+
+push constants for dynamic shader info

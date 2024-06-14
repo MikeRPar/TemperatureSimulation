@@ -93,8 +93,20 @@ class GraphicsEngine {
 		std::vector<VkImage> swapChainImages;
 		VkFormat swapChainImageFormat;
 		VkExtent2D swapChainExtent;
-
 		std::vector<VkImageView> swapChainImageViews;
+
+		VkRenderPass renderPass;
+		VkPipelineLayout pipelineLayout;
+		VkPipeline graphicsPipeline;
+
+		std::vector<VkFramebuffer> swapChainFramebuffers;
+
+		VkCommandPool commandPool;
+		VkCommandBuffer commandBuffer;
+
+		VkSemaphore imageAvailableSemaphore;
+		VkSemaphore renderFinishedSemaphore;
+		VkFence inFlightFence;
 
 		//SET UP FUNCTIONS
 		void initVulkan();
@@ -103,7 +115,12 @@ class GraphicsEngine {
 		void createSurface();
 		void createSwapChain();
 		void createImageViews();
+		void createRenderPass();
 		void createGraphicsPipeline();
+		void createFramebuffers();
+		void createCommandPool();
+		void createCommandBuffer();
+		void createSyncObjects();
 		void setupDebugMessenger();
 
 		//Physical Device Selection
@@ -125,6 +142,9 @@ class GraphicsEngine {
 		static std::vector<char> readFile(const std::string& filename);
 		VkShaderModule createShaderModule(const std::vector<char>& code);
 
+		//Command recording
+		void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
 		//Detail Checking
 		void printOptionalExtensions();
 		bool checkValidationLayerSupport();
@@ -135,6 +155,9 @@ class GraphicsEngine {
 		void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
 		void mainLoop();
+
+		void drawFrame();
+
 		void cleanup();
 };
 
