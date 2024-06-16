@@ -1,7 +1,10 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+
 #include <vector>
+#include <array>
 #include <optional>
 #include <fstream>
 
@@ -37,6 +40,9 @@
 #define ENGINE_MINOR 0
 #define ENGINE_PATCH 0
 
+//Program constants
+#define MAX_FRAMES_IN_FLIGHT 2
+
 VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
 								const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
 
@@ -67,6 +73,39 @@ struct SwapChainSupportDetails {
 	VkSurfaceCapabilitiesKHR capabilities;
 	std::vector<VkSurfaceFormatKHR> formats;
 	std::vector<VkPresentModeKHR> presentModes;
+};
+
+//Struct for Vertices
+struct Vertex {
+	glm::vec3 pos;
+	glm::vec3 color;
+
+	static VkVertexInputBindingDescription getBindingDescription()
+	{
+		VkVertexInputBindingDescription bindingDescription{};
+		bindingDescription.binding = 0;
+		bindingDescription.stride = sizeof(Vertex);
+		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return bindingDescription;
+	}
+
+	static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions() 
+	{
+		std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+
+		attributeDescriptions[0].binding = 0;
+		attributeDescriptions[0].location = 0;
+		attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescriptions[0].offset = offsetof(Vertex, pos);
+
+		attributeDescriptions[1].binding = 0;
+		attributeDescriptions[1].location = 1;
+		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+		attributeDescriptions[1].offset = offsetof(Vertex, color);
+
+		return attributeDescriptions;
+	}
 };
 
 class GraphicsEngine {
@@ -102,24 +141,38 @@ class GraphicsEngine {
 		std::vector<VkFramebuffer> swapChainFramebuffers;
 
 		VkCommandPool commandPool;
-		VkCommandBuffer commandBuffer;
+		std::vector<VkCommandBuffer> commandBuffers;
 
-		VkSemaphore imageAvailableSemaphore;
-		VkSemaphore renderFinishedSemaphore;
-		VkFence inFlightFence;
+		std::vector<VkSemaphore> imageAvailableSemaphores;
+		std::vector<VkSemaphore> renderFinishedSemaphores;
+		std::vector<VkFence> inFlightFences;
+		uint32_t currentFrame = 0;
+		bool framebufferResized = false;
+
+		VkBuffer vertexBuffer;
+		VkDeviceMemory vertexBufferMemory;
+
+		//Vertex data
+		const std::vector<Vertex> vertices = {
+			{{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+			{{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+			{{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}
+		};
 
 		//SET UP FUNCTIONS
 		void initVulkan();
 		void initWindow();
 		void createInstance();
 		void createSurface();
+		void createLogicalDevice();
 		void createSwapChain();
 		void createImageViews();
 		void createRenderPass();
 		void createGraphicsPipeline();
 		void createFramebuffers();
 		void createCommandPool();
-		void createCommandBuffer();
+		void createVertexBuffer();;
+		void createCommandBuffers();
 		void createSyncObjects();
 		void setupDebugMessenger();
 
@@ -129,15 +182,19 @@ class GraphicsEngine {
 		bool checkDeviceExtensionSupport(VkPhysicalDevice device);
 		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
-		//Logical Device Creation
-		void createLogicalDevice();
-
 		//Swapchain & Surface
 		SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 		VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 		VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 		VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
+		//Swapchain recreation
+		void recreateSwapChain();
+		//Helper to remove old swap chain
+		void cleanupSwapChain();
+		//frame buffer resize callback, used for init window with GLFW
+		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+		
 		//Shaders
 		static std::vector<char> readFile(const std::string& filename);
 		VkShaderModule createShaderModule(const std::vector<char>& code);
@@ -150,7 +207,9 @@ class GraphicsEngine {
 		bool checkValidationLayerSupport();
 		std::vector<const char*> getRequiredExtensions();
 		
-		
+		//Vertex buffer creation helper
+		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
 		//Debug creation helper
 		void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 

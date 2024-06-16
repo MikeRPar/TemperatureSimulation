@@ -11,6 +11,7 @@ Add support for using multiple GPUs?
 
 Swap chain:
 Post processing?
+Improve recreation
 
 Image view swizzle?
 
@@ -23,3 +24,12 @@ Different input assembly?
 Different rasterizer settings for rendering? allow the user the change them?
 
 push constants for dynamic shader info
+
+Set for 2D or 3D modes
+
+Codebase:
+Change the structure of both headers and source for better orginization
+
+note to self:
+look into understanding suitable memory buffers better
+Do challenge for transfer queue
