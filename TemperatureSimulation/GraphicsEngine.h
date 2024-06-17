@@ -151,12 +151,19 @@ class GraphicsEngine {
 
 		VkBuffer vertexBuffer;
 		VkDeviceMemory vertexBufferMemory;
+		VkBuffer indexBuffer;
+		VkDeviceMemory indexBufferMemory;
 
 		//Vertex data
 		const std::vector<Vertex> vertices = {
-			{{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
-			{{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
-			{{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}
+			{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+			{{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+			{{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+			{{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}}
+		};
+		//Indices 
+		const std::vector<uint16_t> indices = {
+			0, 1, 2, 2, 3, 0
 		};
 
 		//SET UP FUNCTIONS
@@ -171,7 +178,9 @@ class GraphicsEngine {
 		void createGraphicsPipeline();
 		void createFramebuffers();
 		void createCommandPool();
-		void createVertexBuffer();;
+		void createVertexBuffer();
+		void createIndexBuffer();
+		void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory); //Helper
 		void createCommandBuffers();
 		void createSyncObjects();
 		void setupDebugMessenger();
@@ -207,8 +216,9 @@ class GraphicsEngine {
 		bool checkValidationLayerSupport();
 		std::vector<const char*> getRequiredExtensions();
 		
-		//Vertex buffer creation helper
+		//Buffer helpers
 		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+		void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
 		//Debug creation helper
 		void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
