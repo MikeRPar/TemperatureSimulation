@@ -108,12 +108,6 @@ struct Vertex {
 	}
 };
 
-struct UniformBufferObject {
-	glm::mat4 model;
-	glm::mat4 view;
-	glm::mat4 proj;
-};
-
 class GraphicsEngine {
 	public:
 		GraphicsEngine();
@@ -161,6 +155,13 @@ class GraphicsEngine {
 		VkBuffer indexBuffer;
 		VkDeviceMemory indexBufferMemory;
 
+		std::vector<VkBuffer> uniformBuffers;
+		std::vector<VkDeviceMemory> uniformBuffersMemory;
+		std::vector<void*> uniformBuffersMapped;
+
+		VkDescriptorPool descriptorPool;
+		std::vector<VkDescriptorSet> descriptorSets;
+
 		//Vertex data
 		const std::vector<Vertex> vertices = {
 			{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
@@ -179,6 +180,12 @@ class GraphicsEngine {
 			4, 5, 6, 6, 7, 4
 		};
 
+		struct UniformBufferObject {
+			glm::mat4 model;
+			glm::mat4 view;
+			glm::mat4 proj;
+		};
+
 		//SET UP FUNCTIONS
 		void initVulkan();
 		void initWindow();
@@ -194,7 +201,10 @@ class GraphicsEngine {
 		void createCommandPool();
 		void createVertexBuffer();
 		void createIndexBuffer();
+		void createUniformBuffers();
 		void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory); //Helper
+		void createDescriptorPool();
+		void createDescriptorSets();
 		void createCommandBuffers();
 		void createSyncObjects();
 		void setupDebugMessenger();
@@ -233,6 +243,9 @@ class GraphicsEngine {
 		//Buffer helpers
 		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
+		//used in drawframe to update uniform buffer
+		void updateUniformBuffer(uint32_t currentImage);
 
 		//Debug creation helper
 		void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
