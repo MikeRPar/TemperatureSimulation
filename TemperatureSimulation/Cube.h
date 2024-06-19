@@ -18,24 +18,46 @@
 //array we intend to fill, so for now this is fine, will restructure in future 
 #include "GraphicsEngine.h"
 
-std::vector<Cube> cubes;
+#define COLOR_VECTOR_BLUE {0, 0 , 255}
+#define COLOR_VECTOR_TEAL {0, 255, 191}
+#define COLOR_VECTOR_WHITE {255, 255, 255}
+#define COLOR_VECTOR_YELLOW {255, 246, 120}
+#define COLOR_VECTOR_RED {255, 0, 0}
+
+
 
 struct Cube {
 	uint32_t cube_index;
-	uint32_t color;
 	std::vector<Vertex> vertices;
 	std::vector<uint16_t> indices;
+
+	Cube() : vertices(8), indices(36) {}
+
+	void updateColor(glm::vec3 color)
+	{
+		for (auto vertex : vertices)
+		{
+			vertex.color = color;
+		}
+	}
 };
+
+typedef struct Heatspot {
+	int radius;
+	Vertex center;
+} Heatspot;
 
 void initCubes(int samples);
 
-void generateCubes(int samples);
+void generateCubes();
 
 void placeHotSpots();
 
 void updateTemperatures();
 
-void copyToDisplayBuffer();
+void copyToDisplayBuffer(std::vector<Vertex> &vertices, std::vector<uint16_t> &indices);
+
+void printCubes();
 
 #endif
 

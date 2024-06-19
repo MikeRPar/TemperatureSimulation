@@ -164,6 +164,7 @@ class GraphicsEngine {
 
 		//Vertex data
 		const std::vector<Vertex> vertices = {
+			/* cool symbol data
 			{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
 			{{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
 			{{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
@@ -173,11 +174,14 @@ class GraphicsEngine {
 			{{0.2f, -0.2f, 0.0f}, {0.0f, 0.0f, 0.0f}},
 			{{0.2f, 0.2f, 0.0f}, {0.0f, 0.0f, 0.0f}},
 			{{-0.2f, 0.2f, 0.0f}, {0.0f, 0.0f, 0.0f}}
+			*/
 		};
 		//Indices 
 		const std::vector<uint16_t> indices = {
+			/* Cool symbol data
 			0, 1, 2, 2, 3, 0,
 			4, 5, 6, 6, 7, 4
+			*/
 		};
 
 		struct UniformBufferObject {
