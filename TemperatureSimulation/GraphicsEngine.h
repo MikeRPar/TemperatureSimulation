@@ -113,6 +113,10 @@ class GraphicsEngine {
 		GraphicsEngine();
 		GraphicsEngine(const char* name);
 		void run();
+
+		//Used to fill the vertex and index arrays
+		void fillArrays(std::vector<Vertex>& n_vertices, std::vector<uint16_t>& n_indices);
+
 	private:
 		//PRIVATE CLASS MEMBERS
 		GLFWwindow* window;
@@ -163,7 +167,7 @@ class GraphicsEngine {
 		std::vector<VkDescriptorSet> descriptorSets;
 
 		//Vertex data
-		const std::vector<Vertex> vertices = {
+		std::vector<Vertex> vertices = {}; //{
 			/* cool symbol data
 			{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
 			{{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
@@ -175,9 +179,9 @@ class GraphicsEngine {
 			{{0.2f, 0.2f, 0.0f}, {0.0f, 0.0f, 0.0f}},
 			{{-0.2f, 0.2f, 0.0f}, {0.0f, 0.0f, 0.0f}}
 			*/
-		};
+		//};
 		//Indices 
-		const std::vector<uint16_t> indices = {
+		std::vector<uint16_t> indices = {
 			/* Cool symbol data
 			0, 1, 2, 2, 3, 0,
 			4, 5, 6, 6, 7, 4

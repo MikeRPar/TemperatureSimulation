@@ -9,6 +9,7 @@
 
 #include <chrono>
 
+#include <cstdlib>
 #include <string.h>
 #include <cstring>
 #include <stdint.h>
@@ -1320,6 +1321,19 @@ void GraphicsEngine::updateUniformBuffer(uint32_t currentImage)
 	ubo.proj[1][1] *= -1;
 
 	memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+}
+
+void GraphicsEngine::fillArrays(std::vector<Vertex>& n_vertices, std::vector<uint16_t>& n_indices)
+{
+	for (int i = 0; i < n_vertices.size(); i++)
+	{
+		vertices.push_back(n_vertices[i]);
+	}
+
+	for (int i = 0; i < n_indices.size(); i++)
+	{
+		indices.push_back(n_indices[i]);
+	}
 }
 
 void GraphicsEngine::cleanup()

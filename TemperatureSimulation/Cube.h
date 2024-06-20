@@ -25,7 +25,6 @@
 #define COLOR_VECTOR_RED {255, 0, 0}
 
 
-
 struct Cube {
 	uint32_t cube_index;
 	std::vector<Vertex> vertices;
