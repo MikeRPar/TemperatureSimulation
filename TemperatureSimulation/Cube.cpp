@@ -40,20 +40,20 @@ void generateCubes()
 
 				//Cube - 6 Faces, 2 Tris per face, 3 indices per Tri = (6 * 2) * 3 = 36 indices
 				cubes[index].indices[0] = 0;
-				cubes[index].indices[1] = 4;
-				cubes[index].indices[2] = 5;
+				cubes[index].indices[1] = 1;
+				cubes[index].indices[2] = 2;
 				//F0
-				cubes[index].indices[3] = 0;
-				cubes[index].indices[4] = 1;
-				cubes[index].indices[5] = 5;
+				cubes[index].indices[3] = 3;
+				cubes[index].indices[4] = 2;
+				cubes[index].indices[5] = 1;
 
 				cubes[index].indices[6] = 0;
-				cubes[index].indices[7] = 4;
-				cubes[index].indices[8] = 6;
+				cubes[index].indices[7] = 1;
+				cubes[index].indices[8] = 4;
 				//F1
-				cubes[index].indices[9] = 0;
-				cubes[index].indices[10] = 2;
-				cubes[index].indices[11] = 6;
+				cubes[index].indices[9] = 1;
+				cubes[index].indices[10] = 4;
+				cubes[index].indices[11] = 5;
 
 				cubes[index].indices[12] = 4;
 				cubes[index].indices[13] = 5;
@@ -63,28 +63,28 @@ void generateCubes()
 				cubes[index].indices[16] = 6;
 				cubes[index].indices[17] = 7;
 
-				cubes[index].indices[18] = 2;
-				cubes[index].indices[19] = 6;
-				cubes[index].indices[20] = 7;
+				cubes[index].indices[18] = 0;
+				cubes[index].indices[19] = 2;
+				cubes[index].indices[20] = 6;
 				//F3
-				cubes[index].indices[21] = 2;
-				cubes[index].indices[22] = 3;
-				cubes[index].indices[23] = 7;
+				cubes[index].indices[21] = 0;
+				cubes[index].indices[22] = 4;
+				cubes[index].indices[23] = 6;
 
-				cubes[index].indices[24] = 1;
-				cubes[index].indices[25] = 2;
-				cubes[index].indices[26] = 5;
+				cubes[index].indices[24] = 7;
+				cubes[index].indices[25] = 3;
+				cubes[index].indices[26] = 1;
 				//F4
-				cubes[index].indices[27] = 1;
-				cubes[index].indices[28] = 2;
-				cubes[index].indices[29] = 3;
+				cubes[index].indices[27] = 7;
+				cubes[index].indices[28] = 5;
+				cubes[index].indices[29] = 1;
 
-				cubes[index].indices[30] = 0;
-				cubes[index].indices[31] = 1;
-				cubes[index].indices[32] = 3;
+				cubes[index].indices[30] = 2;
+				cubes[index].indices[31] = 3;
+				cubes[index].indices[32] = 6;
 				//F5
-				cubes[index].indices[33] = 0;
-				cubes[index].indices[34] = 2;
+				cubes[index].indices[33] = 7;
+				cubes[index].indices[34] = 6;
 				cubes[index].indices[35] = 3;
 
 
