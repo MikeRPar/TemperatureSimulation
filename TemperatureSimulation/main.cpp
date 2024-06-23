@@ -21,7 +21,7 @@
 int main()
 {
 	GraphicsEngine graphicsEngine("Temperature Simulation");
-	initCubes(2);
+	initCubes(3);
 	std::vector<Vertex> m_vertices;
 	std::vector<uint16_t> m_indices;
 	copyToDisplayBuffer(m_vertices, m_indices);

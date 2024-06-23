@@ -79,6 +79,7 @@ struct SwapChainSupportDetails {
 struct Vertex {
 	glm::vec3 pos;
 	glm::vec3 color;
+	glm::vec2 texCoord;
 
 	static VkVertexInputBindingDescription getBindingDescription()
 	{
@@ -90,9 +91,9 @@ struct Vertex {
 		return bindingDescription;
 	}
 
-	static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions() 
+	static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() 
 	{
-		std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+		std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
 
 		attributeDescriptions[0].binding = 0;
 		attributeDescriptions[0].location = 0;
@@ -104,70 +105,96 @@ struct Vertex {
 		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
 		attributeDescriptions[1].offset = offsetof(Vertex, color);
 
+		attributeDescriptions[2].binding = 0;
+		attributeDescriptions[2].location = 2;
+		attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+
 		return attributeDescriptions;
 	}
 };
 
 class GraphicsEngine {
-	public:
-		GraphicsEngine();
-		GraphicsEngine(const char* name);
-		void run();
+public:
+	GraphicsEngine();
+	GraphicsEngine(const char* name);
+	void run();
 
-		//Used to fill the vertex and index arrays
-		void fillArrays(std::vector<Vertex>& n_vertices, std::vector<uint16_t>& n_indices);
+	//Used to fill the vertex and index arrays
+	void fillArrays(std::vector<Vertex>& n_vertices, std::vector<uint16_t>& n_indices);
 
-	private:
-		//PRIVATE CLASS MEMBERS
-		GLFWwindow* window;
-		char* windowName; //Should not change during runtime, can't make const though
+private:
+	//PRIVATE CLASS MEMBERS
+	GLFWwindow* window;
+	char* windowName; //Should not change during runtime, can't make const though
 
-		VkInstance instance; 
-		VkDebugUtilsMessengerEXT debugMessenger;
-		VkSurfaceKHR surface;
-		VkSwapchainKHR swapChain;
+	VkInstance instance;
+	VkDebugUtilsMessengerEXT debugMessenger;
+	VkSurfaceKHR surface;
+	VkSwapchainKHR swapChain;
 
-		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-		VkDevice device; //Logical device
+	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+	VkDevice device; //Logical device
 
-		VkQueue graphicsQueue;
-		VkQueue presentQueue;
+	VkQueue graphicsQueue;
+	VkQueue presentQueue;
 
-		std::vector<VkImage> swapChainImages;
-		VkFormat swapChainImageFormat;
-		VkExtent2D swapChainExtent;
-		std::vector<VkImageView> swapChainImageViews;
+	std::vector<VkImage> swapChainImages;
+	VkFormat swapChainImageFormat;
+	VkExtent2D swapChainExtent;
+	std::vector<VkImageView> swapChainImageViews;
 
-		VkRenderPass renderPass;
-		VkDescriptorSetLayout descriptorSetLayout;
-		VkPipelineLayout pipelineLayout;
-		VkPipeline graphicsPipeline;
+	VkRenderPass renderPass;
+	VkDescriptorSetLayout descriptorSetLayout;
+	VkPipelineLayout pipelineLayout;
+	VkPipeline graphicsPipeline;
 
-		std::vector<VkFramebuffer> swapChainFramebuffers;
+	std::vector<VkFramebuffer> swapChainFramebuffers;
 
-		VkCommandPool commandPool;
-		std::vector<VkCommandBuffer> commandBuffers;
+	VkCommandPool commandPool;
+	std::vector<VkCommandBuffer> commandBuffers;
 
-		std::vector<VkSemaphore> imageAvailableSemaphores;
-		std::vector<VkSemaphore> renderFinishedSemaphores;
-		std::vector<VkFence> inFlightFences;
-		uint32_t currentFrame = 0;
-		bool framebufferResized = false;
+	std::vector<VkSemaphore> imageAvailableSemaphores;
+	std::vector<VkSemaphore> renderFinishedSemaphores;
+	std::vector<VkFence> inFlightFences;
+	uint32_t currentFrame = 0;
+	bool framebufferResized = false;
 
-		VkBuffer vertexBuffer;
-		VkDeviceMemory vertexBufferMemory;
-		VkBuffer indexBuffer;
-		VkDeviceMemory indexBufferMemory;
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexBufferMemory;
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexBufferMemory;
 
-		std::vector<VkBuffer> uniformBuffers;
-		std::vector<VkDeviceMemory> uniformBuffersMemory;
-		std::vector<void*> uniformBuffersMapped;
+	std::vector<VkBuffer> uniformBuffers;
+	std::vector<VkDeviceMemory> uniformBuffersMemory;
+	std::vector<void*> uniformBuffersMapped;
 
-		VkDescriptorPool descriptorPool;
-		std::vector<VkDescriptorSet> descriptorSets;
+	VkDescriptorPool descriptorPool;
+	std::vector<VkDescriptorSet> descriptorSets;
 
-		//Vertex data
-		std::vector<Vertex> vertices = {}; //{
+	VkImage depthImage;
+	VkDeviceMemory depthImageMemory;
+	VkImageView depthImageView;
+
+	VkImage textureImage;
+	VkDeviceMemory textureImageMemory;
+	VkImageView textureImageView;
+	VkSampler textureSampler;
+
+	//Vertex data
+	std::vector<Vertex> vertices = {};
+	/*{
+		{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+	{{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+	{{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+	{{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+
+	{{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+	{{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+	{{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+	{{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
+	};*/
+			//{
 			/* cool symbol data
 			{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
 			{{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
@@ -182,10 +209,15 @@ class GraphicsEngine {
 		//};
 		//Indices 
 		std::vector<uint16_t> indices = {
+			//0, 1, 2, 2, 3, 0
 			/* Cool symbol data
 			0, 1, 2, 2, 3, 0,
 			4, 5, 6, 6, 7, 4
 			*/
+
+
+			//0, 1, 2, 2, 3, 0,
+			//4, 5, 6, 6, 7, 4
 		};
 
 		struct UniformBufferObject {
@@ -205,8 +237,12 @@ class GraphicsEngine {
 		void createRenderPass();
 		void createDescriptorSetLayout();
 		void createGraphicsPipeline();
+		void createDepthResources();
 		void createFramebuffers();
 		void createCommandPool();
+		void createTextureImage();
+		void createTextureImageView();
+		void createTextureSampler();
 		void createVertexBuffer();
 		void createIndexBuffer();
 		void createUniformBuffers();
@@ -242,6 +278,9 @@ class GraphicsEngine {
 
 		//Command recording
 		void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+		//Command buffer helpers
+		VkCommandBuffer beginSingleTimeCommands();
+		void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 
 		//Detail Checking
 		void printOptionalExtensions();
@@ -252,8 +291,19 @@ class GraphicsEngine {
 		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
+		//Image creation helpers
+		void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+		void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+		void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+		VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
+
 		//used in drawframe to update uniform buffer
 		void updateUniformBuffer(uint32_t currentImage);
+
+		//Depth resources helpers
+		VkFormat findDepthFormat();
+		VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+		bool hasStencilComponent(VkFormat format);
 
 		//Debug creation helper
 		void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
