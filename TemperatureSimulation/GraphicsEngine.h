@@ -123,6 +123,9 @@ public:
 	//Used to fill the vertex and index arrays
 	void fillArrays(std::vector<Vertex>& n_vertices, std::vector<uint16_t>& n_indices);
 
+	//Change camera start position
+	void setCameraStartPosition(glm::vec3 cameraLocation, glm::vec3 cameraFacing);
+
 private:
 	//PRIVATE CLASS MEMBERS
 	GLFWwindow* window;
@@ -181,6 +184,7 @@ private:
 	VkImageView textureImageView;
 	VkSampler textureSampler;
 
+
 	//Vertex data
 	std::vector<Vertex> vertices = {};
 	/*{
@@ -225,6 +229,10 @@ private:
 			glm::mat4 view;
 			glm::mat4 proj;
 		};
+
+
+		//Weird use, fix later
+		UniformBufferObject ubo_start{};
 
 		//SET UP FUNCTIONS
 		void initVulkan();
@@ -299,6 +307,7 @@ private:
 
 		//used in drawframe to update uniform buffer
 		void updateUniformBuffer(uint32_t currentImage);
+
 
 		//Depth resources helpers
 		VkFormat findDepthFormat();

@@ -20,14 +20,17 @@ void initCubes(int samples)
 
 void generateCubes()
 {
+	int z = 0;
 	for (uint32_t z = 0; z < side_length; z++)
 	{
+		int y = 0;
 		for (uint32_t y = 0; y < side_length; y++)
 		{
+			int x = 0;
 			for (uint32_t x = 0; x < side_length; x++)
 			{
 				int index = (z * side_length * side_length) + (y * side_length) + x;
-				cubes[index].vertices[0] = { {x, y, z }, COLOR_VECTOR_RED };
+				cubes[index].vertices[0] = { {x, y, z }, COLOR_VECTOR_BLUE };
 				cubes[index].vertices[1] = { {x + 1, y, z},  COLOR_VECTOR_BLUE };
 				cubes[index].vertices[2] = { {x, y + 1, z}, COLOR_VECTOR_BLUE };
 				cubes[index].vertices[3] = { {x + 1, y + 1, z}, COLOR_VECTOR_BLUE };
@@ -86,7 +89,6 @@ void generateCubes()
 				cubes[index].indices[33] = 7;
 				cubes[index].indices[34] = 6;
 				cubes[index].indices[35] = 3;
-
 
 			}
 		}
