@@ -125,6 +125,7 @@ public:
 
 	//Change camera start position
 	void setCameraStartPosition(glm::vec3 cameraLocation, glm::vec3 cameraFacing);
+	void setPerspective(float fovy_degrees, float nearPlane, float farPlane);
 
 private:
 	//PRIVATE CLASS MEMBERS
@@ -233,6 +234,8 @@ private:
 
 		//Weird use, fix later
 		UniformBufferObject ubo_start{};
+		float nearP;
+		float farP;
 
 		//SET UP FUNCTIONS
 		void initVulkan();

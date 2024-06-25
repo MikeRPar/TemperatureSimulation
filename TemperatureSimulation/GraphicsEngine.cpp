@@ -1644,7 +1644,7 @@ void GraphicsEngine::updateUniformBuffer(uint32_t currentImage)
 
 	ubo.view = ubo_start.view;
 
-	ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
+	ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, nearP, farP);
 
 	ubo.proj[1][1] *= -1;
 
@@ -1654,6 +1654,14 @@ void GraphicsEngine::updateUniformBuffer(uint32_t currentImage)
 void GraphicsEngine::setCameraStartPosition(glm::vec3 cameraLocation, glm::vec3 cameraFacing)
 {
 	ubo_start.view = glm::lookAt(cameraLocation, cameraFacing, glm::vec3(0.0f, 0.0f, 1.0f));
+}
+
+void GraphicsEngine::setPerspective(float fovy_degrees, float nearPlane, float farPlane)
+{
+	nearP = 0.1f;
+	farP = farPlane;
+	//ubo_start.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
+	//ubo_start.proj[1][1] *= -1;
 }
 
 void GraphicsEngine::fillArrays(std::vector<Vertex>& n_vertices, std::vector<uint16_t>& n_indices)
