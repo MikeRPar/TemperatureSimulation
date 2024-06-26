@@ -26,7 +26,8 @@
 
 
 struct Cube {
-	uint32_t cube_index;
+	uint32_t temperature;
+	uint32_t radius;
 	std::vector<Vertex> vertices;
 	std::vector<uint16_t> indices;
 

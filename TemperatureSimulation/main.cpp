@@ -23,7 +23,7 @@
 
 int main()
 {
-	int samples = 2;
+	int samples = 10;
 
 	GraphicsEngine graphicsEngine("Temperature Simulation");
 	initCubes(samples);

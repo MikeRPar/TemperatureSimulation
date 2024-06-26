@@ -20,6 +20,35 @@ void initCubes(int samples)
 
 void generateCubes()
 {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+
+	int heatspot_count;
+
+	if (side_length < 5)
+	{
+		std::uniform_real_distribution<double> spot_selector(1.0, side_length);
+		heatspot_count = spot_selector(gen);
+	}
+	else {
+		std::uniform_real_distribution<double> spot_selector(1.0, 5.0);
+		heatspot_count = spot_selector(gen);
+	}
+
+	std::vector<Cube> heatSpots(heatspot_count);
+
+	std::uniform_real_distribution<double> center_selector(0.0, (double)side_length);
+	std::uniform_real_distribution<double> radius_selector(1, side_length / 2);
+
+	for (int i = 0; i < heatSpots.size(); i++)
+	{
+		heatSpots[i].vertices[0].pos.x = center_selector(gen);
+		heatSpots[i].vertices[0].pos.y = center_selector(gen);
+		heatSpots[i].vertices[0].pos.z = center_selector(gen);
+		heatSpots[i].radius = radius_selector(gen);
+	}
+
 	int z = 0;
 	for (uint32_t z = 0; z < side_length; z++)
 	{
@@ -30,14 +59,27 @@ void generateCubes()
 			for (uint32_t x = 0; x < side_length; x++)
 			{
 				int index = (z * side_length * side_length) + (y * side_length) + x;
-				cubes[index].vertices[0] = { {x, y, z }, COLOR_VECTOR_BLUE };
-				cubes[index].vertices[1] = { {x + 1, y, z},  COLOR_VECTOR_BLUE };
-				cubes[index].vertices[2] = { {x, y + 1, z}, COLOR_VECTOR_BLUE };
-				cubes[index].vertices[3] = { {x + 1, y + 1, z}, COLOR_VECTOR_BLUE };
-				cubes[index].vertices[4] = { {x, y, z + 1}, COLOR_VECTOR_BLUE };
-				cubes[index].vertices[5] = { {x + 1, y, z + 1}, COLOR_VECTOR_BLUE };
-				cubes[index].vertices[6] = { {x, y + 1, z + 1}, COLOR_VECTOR_BLUE };
-				cubes[index].vertices[7] = { {x + 1, y + 1, z + 1}, COLOR_VECTOR_BLUE };
+
+				glm::vec3 color = COLOR_VECTOR_BLUE;
+
+				for (int i = 0; i < heatSpots.size(); i++)
+				{
+					int d = (int)std::sqrt(std::pow(heatSpots[i].vertices[0].pos.x - x, 2) + std::pow(heatSpots[i].vertices[0].pos.y - y, 2) + std::pow(heatSpots[i].vertices[0].pos.z - z, 2));
+					if (d < heatSpots[i].radius)
+					{
+						cubes[index].temperature = 100;
+						color = COLOR_VECTOR_RED;
+					}
+				}
+
+				cubes[index].vertices[0] = { {x, y, z }, color };
+				cubes[index].vertices[1] = { {x + 1, y, z},  color };
+				cubes[index].vertices[2] = { {x, y + 1, z}, color };
+				cubes[index].vertices[3] = { {x + 1, y + 1, z}, color };
+				cubes[index].vertices[4] = { {x, y, z + 1}, color };
+				cubes[index].vertices[5] = { {x + 1, y, z + 1}, color };
+				cubes[index].vertices[6] = { {x, y + 1, z + 1}, color };
+				cubes[index].vertices[7] = { {x + 1, y + 1, z + 1}, color };
 
 				//There's gotta be a better way to do this
 
