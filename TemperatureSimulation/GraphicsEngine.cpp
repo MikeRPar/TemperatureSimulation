@@ -11,6 +11,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+//#include <imgui_impl_glfw.h>
+//#include <imgui_impl_vulkan.h>
+//#include <imgui.h>
+
 #include <chrono>
 
 #include <cstdlib>
@@ -1546,6 +1550,30 @@ void GraphicsEngine::framebufferResizeCallback(GLFWwindow* window, int width, in
 {
 	auto app = reinterpret_cast<GraphicsEngine*>(glfwGetWindowUserPointer(window));
 	app->framebufferResized = true;
+}
+
+void GraphicsEngine::initGUI()
+{
+	//ImGui::CreateContext();
+	//ImGuiIO& io = ImGui::GetIO();
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	//ImGui_ImplGlfw_InitForVulkan(window, false);
+	//ImGui_ImplVulkan_InitInfo init_info = {};
+	//init_info.Instance = instance;
+	//init_info.PhysicalDevice = physicalDevice;
+	//init_info.Device = device;
+	//init_info.QueueFamily = g_QueueFamily;
+	//init_info.Queue = graphicsQueue;
+	//init_info.PipelineCache = g_PipelineCache;
+	//init_info.DescriptorPool = g_DescriptorPool;
+	//init_info.RenderPass = wd->RenderPass;
+	//init_info.Subpass = 0;
+	//init_info.MinImageCount = g_MinImageCount;
+	//init_info.ImageCount = wd->ImageCount;
+	//init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+	//init_info.Allocator = g_Allocator;
+	//init_info.CheckVkResultFn = check_vk_result;
+	//ImGui_ImplVulkan_Init
 }
 
 void GraphicsEngine::mainLoop()

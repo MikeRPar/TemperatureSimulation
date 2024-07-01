@@ -18,6 +18,10 @@
 
 #include <glm/glm.hpp>
 
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_vulkan.h>
+#include <imgui.h>
+
 #include "GraphicsEngine.h"
 #include "Cube.h"
 
@@ -35,7 +39,7 @@ int main()
 	//Change camera start based on sample amount
 	graphicsEngine.setCameraStartPosition(glm::vec3(samples * 2.0f, samples * 2.0f, samples * 2.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	graphicsEngine.setPerspective(45.0f, 0.1f, samples * samples * 10.0f);
-	
+
 	try {
 		graphicsEngine.run();
 	}

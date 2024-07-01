@@ -142,6 +142,7 @@ private:
 
 	VkQueue graphicsQueue;
 	VkQueue presentQueue;
+	uint32_t graphicsQueueFamily;
 
 	std::vector<VkImage> swapChainImages;
 	VkFormat swapChainImageFormat;
@@ -263,6 +264,8 @@ private:
 		void createCommandBuffers();
 		void createSyncObjects();
 		void setupDebugMessenger();
+
+		void initGUI();
 
 		//Physical Device Selection
 		void pickPhysicalDevice();
